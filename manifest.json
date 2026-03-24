@@ -1,0 +1,12 @@
+{
+  "id": "@citadel-app/youtube",
+  "version": "1.0.0",
+  "name": "YouTube Scrolls",
+  "description": "Native YouTube timeline scrolling for Citadel.",
+  "author": "Citadel",
+  "main": "dist/main.js",
+  "renderer": "dist/renderer.js",
+  "enabled": true,
+  "ipcs": [],
+  "icon": "assets/icon.svg"
+}

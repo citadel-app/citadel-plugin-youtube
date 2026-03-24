@@ -1,0 +1,61 @@
+name: Release Plugin
+
+on:
+  push:
+        branches: ["main"]
+
+jobs:
+  build_and_release:
+    name: Build and Release Plugin
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed for creating GitHub Releases
+      packages: read
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install --legacy-peer-deps
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Plugin
+        run: npm run build
+
+      - name: Package Plugin (ZIP)
+        run: |
+          # Create a staging directory to zip cleanly
+          mkdir -p .release-bundle
+          
+          # Copy the bundled assets
+          cp -r dist .release-bundle/
+          cp manifest.json .release-bundle/
+          
+          # Optional: Copy branding/assets if they exist
+          if [ -d "assets" ]; then
+            cp -r assets .release-bundle/
+          fi
+          
+          # Zip the contents of the staging directory
+          cd .release-bundle
+          zip -r ../citadel-plugin-youtube.zip ./*
+          cd ..
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: citadel-plugin-youtube.zip
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
