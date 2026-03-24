@@ -1,5 +1,5 @@
 {
-  "name": "citadel-plugin-youtube",
+  "name": "@citadel-app/youtube",
   "version": "1.0.0",
   "description": "YouTube Plugin for Citadel App",
   "author": "Citadel Team",
