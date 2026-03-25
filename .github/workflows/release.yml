@@ -30,6 +30,10 @@ jobs:
       - name: Build Plugin
         run: npm run build
 
+      - name: Get Version
+        id: get_version
+        run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
       - name: Package Plugin (ZIP)
         run: |
           # Create a staging directory to zip cleanly
@@ -53,6 +57,8 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          name: Release v${{ steps.get_version.outputs.VERSION }}
           files: citadel-plugin-youtube.zip
           generate_release_notes: true
           draft: false
