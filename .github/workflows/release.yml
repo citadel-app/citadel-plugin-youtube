@@ -37,7 +37,7 @@ jobs:
           
           # Copy the bundled assets
           cp -r dist .release-bundle/
-          cp manifest.json .release-bundle/
+          cp package.json .release-bundle/
           
           # Optional: Copy branding/assets if they exist
           if [ -d "assets" ]; then
