@@ -16,7 +16,7 @@ import { YouTubeModuleBindings } from './lib/module-bindings';
 
 export const YouTubeModule: IModule = {
     id: '@citadel-app/youtube',
-    version: '1.0.0',
+    version: '1.1.0',
     ipcs: [],
     permissions: {
         ipc: [
