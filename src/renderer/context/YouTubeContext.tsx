@@ -4,6 +4,7 @@ import { useCoreServices } from '@citadel-app/ui';
 import { createYouTubeDataManager } from '../lib/youtube-data-manager';
 
 import { FeedItem, Feed as YouTubeFeed, FeedItemStatus, pMap, mergeFeedItems } from '@citadel-app/core';
+import { YouTubeModuleBindings } from '../lib/module-bindings';
 
 interface YouTubeContextType {
     feeds: YouTubeFeed[];
@@ -15,6 +16,7 @@ interface YouTubeContextType {
     refreshFeed: (id: string) => Promise<void>;
     resetFeed: (id: string) => Promise<void>;
     markAsRead: (feedId: string, itemId: string) => void;
+    linkEntryToItem: (feedId: string, itemId: string, entry: { id: string; type: string; title: string }) => void;
     isLoading: boolean;
 }
 
@@ -534,11 +536,52 @@ export const YouTubeProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     const markAsRead = useCallback((_feedId: string, itemId: string) => {
         setItemStatus(prev => {
-            const nextStatus = { ...prev, [itemId]: { ...prev[itemId], read: true } };
+            const nextStatus = { ...prev, [itemId]: { ...(prev[itemId] || { relatedEntries: [] }), read: true } };
             feedDb.updateFeedStatus(itemId, nextStatus[itemId]).catch((e: any) => console.error(e));
             return nextStatus;
         });
     }, []);
+
+    const linkEntryToItem = useCallback((_feedId: string, itemId: string, entry: { id: string; type: string; title: string }) => {
+        setItemStatus(prev => {
+            const current = prev[itemId] || { read: false, relatedEntries: [] };
+            if (current.relatedEntries.some(e => e.id === entry.id)) return prev;
+
+            const nextStatus = {
+                ...prev,
+                [itemId]: {
+                    ...current,
+                    relatedEntries: [...current.relatedEntries, entry]
+                }
+            };
+
+            feedDb.updateFeedStatus(itemId, nextStatus[itemId]).catch((e: any) => console.error(e));
+            return nextStatus;
+        });
+    }, []);
+
+    // Provide registry extension bindings
+    useEffect(() => {
+        const searchItems = async (query: string): Promise<any[]> => {
+            if (!query || query.includes(':')) return [];
+            const lowSearch = query.toLowerCase();
+            const results: any[] = [];
+            for (const feed of feedsRef.current) {
+                const matches = (feed.items || []).filter(item => item.title.toLowerCase().includes(lowSearch));
+                for (const item of matches) {
+                    results.push({
+                        id: item.id,
+                        type: 'youtube-video',
+                        title: item.title,
+                        url: item.link,
+                        metadata: { feedId: feed.id }
+                    });
+                }
+            }
+            return results.slice(0, 5);
+        };
+        YouTubeModuleBindings.setBindings(linkEntryToItem, searchItems);
+    }, [linkEntryToItem]);
 
     return (
         <YouTubeContext.Provider value={{
@@ -551,6 +594,7 @@ export const YouTubeProvider: React.FC<{ children: React.ReactNode }> = ({ child
             refreshFeed,
             resetFeed,
             markAsRead,
+            linkEntryToItem,
             isLoading
         }}>
             {children}

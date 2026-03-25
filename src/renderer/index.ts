@@ -12,6 +12,7 @@ import React, { lazy } from 'react';
 import { YouTubeProvider } from './context/YouTubeContext';
 import { YouTubePlayerProvider } from './context/YouTubePlayerContext';
 import { FloatingYouTubePlayer } from './components/youtube/FloatingYouTubePlayer';
+import { YouTubeModuleBindings } from './lib/module-bindings';
 
 export const YouTubeModule: IModule = {
     id: '@citadel-app/youtube',
@@ -19,11 +20,16 @@ export const YouTubeModule: IModule = {
     ipcs: [],
     permissions: {
         ipc: [
-            'fs.readFile',
-            'fs.writeFile',
-            'fs.exists',
-            'fs.createDirectory',
-            'app.updateSetting'
+            '@citadel-app/base:fs.readFile',
+            '@citadel-app/base:fs.writeFile',
+            '@citadel-app/base:fs.exists',
+            '@citadel-app/base:fs.createDirectory',
+            '@citadel-app/base:app.updateSetting',
+            '@citadel-app/base:net.fetch',
+            '@citadel-app/base:db.getFeedItems',
+            '@citadel-app/base:db.saveFeedItems',
+            '@citadel-app/base:db.getFeedStatus',
+            '@citadel-app/base:db.updateFeedStatus'
         ]
     },
 
@@ -57,11 +63,33 @@ export const YouTubeModule: IModule = {
         }
     ],
 
-    linkSearchProviders: [],
-    crossLinkHandlers: [],
+    linkSearchProviders: [
+        {
+            id: 'youtube-video',
+            label: 'YouTube Videos',
+            icon: 'Youtube',
+            search: async (query: string) => {
+                if (!YouTubeModuleBindings.search) return [];
+                return YouTubeModuleBindings.search(query);
+            }
+        }
+    ],
+    crossLinkHandlers: [
+        {
+            type: 'youtube-video',
+            label: 'Link to Scroll',
+            icon: 'Link',
+            handler: (itemId: string, entry: any, metadata: any) => {
+                if (YouTubeModuleBindings.linkResolver) {
+                    YouTubeModuleBindings.linkResolver(metadata.feedId, itemId, entry);
+                }
+            }
+        }
+    ],
 
     onRendererActivate: async (registrar: RendererRegistrar, _api: ScopedAPI) => {
         registrar.registerPluginSettingsConfig({
+            id: '@citadel-app/youtube',
             title: 'YouTube Feeds',
             fields: [
                 {

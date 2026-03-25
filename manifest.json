@@ -7,6 +7,20 @@
   "main": "dist/main.js",
   "renderer": "dist/renderer.js",
   "enabled": true,
+  "permissions": {
+    "ipc": [
+      "@citadel-app/base:fs.readFile",
+      "@citadel-app/base:fs.writeFile",
+      "@citadel-app/base:fs.exists",
+      "@citadel-app/base:fs.createDirectory",
+      "@citadel-app/base:app.updateSetting",
+      "@citadel-app/base:net.fetch",
+      "@citadel-app/base:db.getFeedItems",
+      "@citadel-app/base:db.saveFeedItems",
+      "@citadel-app/base:db.getFeedStatus",
+      "@citadel-app/base:db.updateFeedStatus"
+    ]
+  },
   "ipcs": [],
   "icon": "assets/icon.svg"
 }

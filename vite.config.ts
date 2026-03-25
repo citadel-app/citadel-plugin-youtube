@@ -27,7 +27,11 @@ export default defineConfig({
         'fs-extra',
         'react-router-dom',
         'react-resizable-panels',
-        'react-window'
+        'react-window',
+        '@radix-ui/react-dropdown-menu',
+        '@radix-ui/react-slot',
+        'clsx',
+        'tailwind-merge'
       ],
       output: [
         {

@@ -1,4 +1,4 @@
-export const RssModuleBindings = {
+export const YouTubeModuleBindings = {
     linkResolver: null as ((feedId: string, itemId: string, targetContent: any) => void) | null,
     search: null as ((query: string) => Promise<any[]>) | null,
     
