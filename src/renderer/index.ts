@@ -89,7 +89,6 @@ export const YouTubeModule: IModule = {
 
     onRendererActivate: async (registrar: RendererRegistrar, _api: ScopedAPI) => {
         registrar.registerPluginSettingsConfig({
-            id: '@citadel-app/youtube',
             title: 'YouTube Feeds',
             fields: [
                 {
