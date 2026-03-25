@@ -13,10 +13,11 @@ import { YouTubeProvider } from './context/YouTubeContext';
 import { YouTubePlayerProvider } from './context/YouTubePlayerContext';
 import { FloatingYouTubePlayer } from './components/youtube/FloatingYouTubePlayer';
 import { YouTubeModuleBindings } from './lib/module-bindings';
+import pkg from '../../package.json';
 
 export const YouTubeModule: IModule = {
     id: '@citadel-app/youtube',
-    version: '1.1.0',
+    version: pkg.version,
     ipcs: [],
     permissions: {
         ipc: [

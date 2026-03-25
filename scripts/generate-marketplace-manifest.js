@@ -60,37 +60,30 @@ if (fs.existsSync(destPkgPath)) {
     metaPkg = JSON.parse(fs.readFileSync(sourcePkgPath, 'utf8'));
 }
 
-// Ensure citadel object exists
-metaPkg.citadel = metaPkg.citadel || {};
-
-// Read Core Plugin Manifest
-const manifestPath = path.join(pluginDir, 'manifest.json');
-if (fs.existsSync(manifestPath)) {
-    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-    if (manifest.id) metaPkg.citadel.id = manifest.id;
-    if (manifest.name) metaPkg.citadel.title = manifest.name;
-    if (manifest.description && !metaPkg.description) metaPkg.description = manifest.description;
-    
-    // Copy the local SVG icon over to marketplace package mapping
-    if (manifest.icon) {
-        metaPkg.citadel.icon = manifest.icon;
-        
-        // Physically copy the icon file into the marketplace directory so it can be hosted on GitHub raw
-        const iconSrcPath = path.join(pluginDir, manifest.icon);
-        const iconDestPath = path.join(marketplaceDir, manifest.icon);
-        if (fs.existsSync(iconSrcPath)) {
-            const iconDestDir = path.dirname(iconDestPath);
-            if (!fs.existsSync(iconDestDir)) fs.mkdirSync(iconDestDir, { recursive: true });
-            fs.copyFileSync(iconSrcPath, iconDestPath);
-            console.log(`[Marketplace Generator] Copied plugin architecture icon: ${manifest.icon}`);
-        }
-    }
-}
+const sourcePkg = JSON.parse(fs.readFileSync(sourcePkgPath, 'utf8'));
 
 // Ensure citadel object exists
 metaPkg.citadel = metaPkg.citadel || {};
 metaPkg.citadel.capabilities = ipcs;
 metaPkg.citadel.permissions = permissions;
+
+// Pull additional metadata from the plugin's package.json citadel property
+if (sourcePkg.citadel) {
+    if (sourcePkg.citadel.title) metaPkg.citadel.title = sourcePkg.citadel.title;
+    if (sourcePkg.citadel.icon) {
+        metaPkg.citadel.icon = sourcePkg.citadel.icon;
+        
+        // Physically copy the icon file into the marketplace directory so it can be hosted on GitHub raw
+        const iconSrcPath = path.join(pluginDir, sourcePkg.citadel.icon);
+        const iconDestPath = path.join(marketplaceDir, sourcePkg.citadel.icon);
+        if (fs.existsSync(iconSrcPath)) {
+            const iconDestDir = path.dirname(iconDestPath);
+            if (!fs.existsSync(iconDestDir)) fs.mkdirSync(iconDestDir, { recursive: true });
+            fs.copyFileSync(iconSrcPath, iconDestPath);
+            console.log(`[Marketplace Generator] Copied plugin icon: ${sourcePkg.citadel.icon}`);
+        }
+    }
+}
 
 fs.writeFileSync(destPkgPath, JSON.stringify(metaPkg, null, 2));
 
