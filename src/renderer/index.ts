@@ -16,7 +16,7 @@ import { YouTubeModuleBindings } from './lib/module-bindings';
 import pkg from '../../package.json';
 
 export const YouTubeModule: IModule = {
-    id: '@citadel-app/youtube',
+    id: pkg.name,
     version: pkg.version,
     ipcs: [],
     permissions: {

@@ -50,7 +50,7 @@ jobs:
 
           # Zip the contents of the staging directory
           cd .release-bundle
-          zip -r ../citadel-plugin-youtube.zip ./*
+          zip -r ../${GITHUB_REPOSITORY#*/}.zip ./*
           cd ..
 
       - name: Create GitHub Release
@@ -60,7 +60,7 @@ jobs:
           tag_name: v${{ steps.get_version.outputs.VERSION }}
           name: Release v${{ steps.get_version.outputs.VERSION }}
           files: |
-            citadel-plugin-youtube.zip
+            ${GITHUB_REPOSITORY#*/}.zip
             package.json
           generate_release_notes: true
           draft: false
@@ -77,10 +77,10 @@ jobs:
           REPO_URL=$(node -p "require('./package.json').repository?.url || ''")
           NAME=$(node -p "require('./package.json').name")
           VERSION="${{ steps.get_version.outputs.VERSION }}"
-          BUNDLE_URL="https://github.com/citadel-app/citadel-plugin-youtube/releases/download/v${VERSION}/citadel-plugin-youtube.zip"
+          BUNDLE_URL="https://github.com/$GITHUB_REPOSITORY_OWNER/${GITHUB_REPOSITORY#*/}/releases/download/v${VERSION}/${GITHUB_REPOSITORY#*/}.zip"
 
           PAYLOAD=$(jq -n \
-            --arg id "youtube" \
+            --arg id "$NAME" \
             --arg ver "$VERSION" \
             --arg url "$BUNDLE_URL" \
             --arg title "$TITLE" \
