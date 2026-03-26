@@ -67,12 +67,12 @@ jobs:
           prerelease: false
           overwrite_files: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN }}
 
       - name: Notify Marketplace
         run: |
           curl -X POST \
             -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: token ${{ secrets.CITADEL_GIT_TOKEN }}" \
+            -H "Authorization: token ${{ secrets.CITADEL_RELEASE_TOKEN }}" \
             https://api.github.com/repos/iwannabebot/citadel-marketplace/dispatches \
             -d "{\"event_type\": \"new-plugin-release\", \"client_payload\": { \"plugin_id\": \"youtube\", \"version\": \"${{ steps.get_version.outputs.VERSION }}\", \"bundle_url\": \"https://github.com/iwannabebot/citadel-plugin-youtube/releases/download/v${{ steps.get_version.outputs.VERSION }}/citadel-plugin-youtube.zip\", \"changelog\": \"Automated release from CI\" } }"
