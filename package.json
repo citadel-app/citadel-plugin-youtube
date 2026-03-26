@@ -9,6 +9,8 @@
     "icon": "assets/icon.svg",
     "main": "dist/main.js",
     "renderer": "dist/renderer.js",
+    "authorUrl": "https://github.com/citadel-app",
+    "verified": true,
     "permissions": [
       "@citadel-app/base:fs.readFile",
       "@citadel-app/base:fs.writeFile",
