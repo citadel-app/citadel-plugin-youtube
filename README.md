@@ -1,4 +1,4 @@
-# Citadel YouTube Plugin
+# Citadel YouTube Plugin ![Verified](https://img.shields.io/badge/Citadel-Verified-blue?logo=checkmarx&logoColor=white)
 
 The official YouTube feed plugin for the Citadel application framework.
 This plugin enables the fetching, parsing, and streaming of YouTube channel and playlist data directly within Citadel workspaces.
