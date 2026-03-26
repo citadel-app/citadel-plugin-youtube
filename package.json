@@ -4,6 +4,10 @@
   "description": "YouTube Plugin for Citadel App",
   "author": "Citadel Team",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/citadel-app/citadel-plugin-youtube.git"
+  },
   "citadel": {
     "title": "YouTube Scrolls",
     "icon": "assets/icon.svg",

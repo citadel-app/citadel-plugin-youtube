@@ -71,8 +71,27 @@ jobs:
 
       - name: Notify Marketplace
         run: |
+          TITLE=$(node -p "require('./package.json').citadel?.title || 'Plugin'")
+          DESCRIPTION=$(node -p "require('./package.json').description || ''")
+          AUTHOR=$(node -p "require('./package.json').author || ''")
+          REPO_URL=$(node -p "require('./package.json').repository?.url || ''")
+          NAME=$(node -p "require('./package.json').name")
+          VERSION="${{ steps.get_version.outputs.VERSION }}"
+          BUNDLE_URL="https://github.com/citadel-app/citadel-plugin-youtube/releases/download/v${VERSION}/citadel-plugin-youtube.zip"
+
+          PAYLOAD=$(jq -n \
+            --arg id "youtube" \
+            --arg ver "$VERSION" \
+            --arg url "$BUNDLE_URL" \
+            --arg title "$TITLE" \
+            --arg desc "$DESCRIPTION" \
+            --arg auth "$AUTHOR" \
+            --arg repo "$REPO_URL" \
+            --arg name "$NAME" \
+            '{event_type: "new-plugin-release", client_payload: {plugin_id: $id, version: $ver, bundle_url: $url, title: $title, description: $desc, author: $auth, repo_url: $repo, name: $name, changelog: "Automated release from CI"}}')
+
           curl -X POST \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${{ secrets.CITADEL_RELEASE_TOKEN }}" \
             https://api.github.com/repos/citadel-app/citadel-marketplace/dispatches \
-            -d "{\"event_type\": \"new-plugin-release\", \"client_payload\": { \"plugin_id\": \"youtube\", \"version\": \"${{ steps.get_version.outputs.VERSION }}\", \"bundle_url\": \"https://github.com/citadel-app/citadel-plugin-youtube/releases/download/v${{ steps.get_version.outputs.VERSION }}/citadel-plugin-youtube.zip\", \"changelog\": \"Automated release from CI\" } }"
+            -d "$PAYLOAD"
