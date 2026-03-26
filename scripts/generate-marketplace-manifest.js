@@ -104,7 +104,7 @@ if (!versionsData.versions[currentVersion]) {
     versionsData.latest = currentVersion;
     
     const bundleUrl = metaPkg.citadel?.bundleUrl || `https://github.com/citadel-app/${metaPkg.name}/releases/download/v${currentVersion}/${metaPkg.name}.zip`;
-    const citadelVersionRange = metaPkg.engines?.citadel || ">=1.0.1";
+    const citadelVersionRange = metaPkg.engines?.citadel || ">=1.0.0";
     
     versionsData.versions[currentVersion] = {
         bundleUrl,
