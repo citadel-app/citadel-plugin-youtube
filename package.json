@@ -8,6 +8,9 @@
     "type": "git",
     "url": "git+https://github.com/citadel-app/citadel-plugin-youtube.git"
   },
+  "engines": {
+    "citadel": ">=1.1.1"
+  },
   "citadel": {
     "title": "YouTube Scrolls",
     "icon": "assets/icon.svg",

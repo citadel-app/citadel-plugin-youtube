@@ -82,6 +82,7 @@ jobs:
           DESCRIPTION=$(node -p "require('./package.json').description || ''")
           AUTHOR=$(node -p "require('./package.json').author || ''")
           REPO_URL=$(node -p "require('./package.json').repository?.url || ''")
+          CITADEL_VERSION_RANGE=$(node -p "require('./package.json').engines?.citadel || '>=1.1.0'")
           NAME=$(node -p "require('./package.json').name")
           VERSION="${{ steps.get_version.outputs.VERSION }}"
           BUNDLE_URL="https://github.com/$GITHUB_REPOSITORY_OWNER/${GITHUB_REPOSITORY#*/}/releases/download/v${VERSION}/${GITHUB_REPOSITORY#*/}.zip"
@@ -95,7 +96,8 @@ jobs:
             --arg auth "$AUTHOR" \
             --arg repo "$REPO_URL" \
             --arg name "$NAME" \
-            '{event_type: "new-plugin-release", client_payload: {plugin_id: $id, version: $ver, bundle_url: $url, title: $title, description: $desc, author: $auth, repo_url: $repo, name: $name, changelog: "Automated release from CI"}}')
+            --arg cvr "$CITADEL_VERSION_RANGE" \
+            '{event_type: "new-plugin-release", client_payload: {plugin_id: $id, version: $ver, bundle_url: $url, title: $title, description: $desc, author: $auth, repo_url: $repo, name: $name, citadel_version_range: $cvr, changelog: "Automated release from CI"}}')
 
           curl -X POST \
             -H "Accept: application/vnd.github+json" \
