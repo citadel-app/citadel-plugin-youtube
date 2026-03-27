@@ -43,22 +43,13 @@ jobs:
 
       - name: Package Plugin (ZIP)
         run: |
-          # Create a staging directory to zip cleanly
-          mkdir -p .release-bundle
-
-          # Copy the bundled assets
-          cp -r dist .release-bundle/
-          cp package.json .release-bundle/
-
-          # Optional: Copy branding/assets if they exist
-          if [ -d "assets" ]; then
-            cp -r assets .release-bundle/
+          # ZIP the relevant files (manifest, package.json, and the built dist directory)
+          # We zip directly into the root folder for easier identification
+          zip -r "citadel-plugin-youtube.zip" dist/ package.json assets/ -x "*.git*" "node_modules/*" ".github/*"
+          if [ ! -f "citadel-plugin-youtube.zip" ]; then
+            echo "Error: Zip file not created!"
+            exit 1
           fi
-
-          # Zip the contents of the staging directory
-          cd .release-bundle
-          zip -r ../${GITHUB_REPOSITORY#*/}.zip ./*
-          cd ..
 
       - name: Create GitHub Release
         id: create_release
@@ -67,7 +58,7 @@ jobs:
           tag_name: v${{ steps.get_version.outputs.VERSION }}
           name: Release v${{ steps.get_version.outputs.VERSION }}
           files: |
-            ${GITHUB_REPOSITORY#*/}.zip
+            citadel-plugin-youtube.zip
             package.json
           generate_release_notes: true
           draft: false
@@ -85,7 +76,7 @@ jobs:
           CITADEL_VERSION_RANGE=$(node -p "require('./package.json').engines?.citadel || '>=1.1.0'")
           NAME=$(node -p "require('./package.json').name")
           VERSION="${{ steps.get_version.outputs.VERSION }}"
-          BUNDLE_URL="https://github.com/$GITHUB_REPOSITORY_OWNER/${GITHUB_REPOSITORY#*/}/releases/download/v${VERSION}/${GITHUB_REPOSITORY#*/}.zip"
+          BUNDLE_URL="https://github.com/$GITHUB_REPOSITORY_OWNER/citadel-plugin-youtube/releases/download/v${VERSION}/citadel-plugin-youtube.zip"
 
           PAYLOAD=$(jq -n \
             --arg id "$NAME" \
