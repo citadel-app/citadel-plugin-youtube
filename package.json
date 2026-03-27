@@ -1,6 +1,6 @@
 {
   "name": "@citadel-app/youtube",
-  "version": "1.0.2",
+  "version": "1.0.6",
   "description": "YouTube Plugin for Citadel App",
   "author": "Citadel Team",
   "license": "MIT",
@@ -52,12 +52,12 @@
     "uuid": "*"
   },
   "devDependencies": {
-    "@citadel-app/core": "1.0.2",
-    "@citadel-app/sdk": "1.0.2",
-    "@citadel-app/ui": "1.0.2",
+    "@citadel-app/core": "1.0.6",
+    "@citadel-app/sdk": "1.0.6",
+    "@citadel-app/ui": "1.0.6",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
     "@types/better-sqlite3": "^7.6.13",
-    "@types/fs-extra": "^11.0.4",
+    "@types/fs-extra": "^11.0.6",
     "@types/node": "^25.5.0",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
