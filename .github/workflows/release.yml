@@ -16,6 +16,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Generate Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -24,7 +31,7 @@ jobs:
       - name: Install Dependencies
         run: npm install --legacy-peer-deps --no-package-lock
         env:
-          CITADEL_RELEASE_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN}}
+          CITADEL_RELEASE_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Build Plugin
         run: npm run build
@@ -66,7 +73,7 @@ jobs:
           prerelease: false
           overwrite_files: true
         env:
-          GITHUB_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Notify Marketplace
         run: |
@@ -91,6 +98,6 @@ jobs:
 
           curl -X POST \
             -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: token ${{ secrets.CITADEL_RELEASE_TOKEN }}" \
+            -H "Authorization: Bearer ${{ steps.app-token.outputs.token }}" \
             https://api.github.com/repos/citadel-app/citadel-marketplace/dispatches \
             -d "$PAYLOAD"
