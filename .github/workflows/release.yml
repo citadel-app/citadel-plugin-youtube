@@ -23,7 +23,7 @@ jobs:
           cache: "npm"
 
       - name: Install Dependencies
-        run: npm install --legacy-peer-deps
+        run: npm install --legacy-peer-deps --no-package-lock
         env:
           CITADEL_RELEASE_TOKEN: ${{ secrets.CITADEL_RELEASE_TOKEN}}
 
