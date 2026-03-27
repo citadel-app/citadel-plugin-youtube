@@ -32,7 +32,7 @@ jobs:
       - name: Install Dependencies
         run: npm install --legacy-peer-deps --no-package-lock
         env:
-          CITADEL_RELEASE_TOKEN: ${{ steps.app-token.outputs.token }}
+          CITADEL_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Plugin
         run: npm run build
