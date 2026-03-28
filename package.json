@@ -1,6 +1,6 @@
 {
   "name": "@citadel-app/youtube",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "YouTube Plugin for Citadel App",
   "author": "Citadel Team",
   "license": "MIT",
@@ -9,7 +9,7 @@
     "url": "git+https://github.com/citadel-app/citadel-plugin-youtube.git"
   },
   "engines": {
-    "citadel": ">=1.1.4"
+    "citadel": ">=1.1.5"
   },
   "citadel": {
     "title": "YouTube Scrolls",
@@ -55,9 +55,9 @@
     "uuid": "*"
   },
   "devDependencies": {
-    "@citadel-app/core": "^1.1.4",
-    "@citadel-app/sdk": "^1.1.4",
-    "@citadel-app/ui": "^1.1.4",
+    "@citadel-app/core": "^1.1.5",
+    "@citadel-app/sdk": "^1.1.5",
+    "@citadel-app/ui": "^1.1.5",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
     "@types/better-sqlite3": "^7.6.13",
     "@types/fs-extra": "^11.0.4",
