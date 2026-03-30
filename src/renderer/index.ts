@@ -7,7 +7,7 @@ export * from './context/YouTubePlayerContext';
 export * from './pages/YouTubePage';
 export * from './components/youtube/FloatingYouTubePlayer';
 
-import { IModule, RendererRegistrar, ScopedAPI } from '@citadel-app/core';
+import { definePlugin } from '@citadel-app/sdk';
 import React, { lazy } from 'react';
 import { YouTubeProvider } from './context/YouTubeContext';
 import { YouTubePlayerProvider } from './context/YouTubePlayerContext';
@@ -15,81 +15,58 @@ import { FloatingYouTubePlayer } from './components/youtube/FloatingYouTubePlaye
 import { YouTubeModuleBindings } from './lib/module-bindings';
 import pkg from '../../package.json';
 
-export const YouTubeModule: IModule = {
+export const YouTubeModule = definePlugin({
     id: pkg.name,
     version: pkg.version,
-    ipcs: [],
-    permissions: {
-        ipc: [
-            '@citadel-app/base:fs.readFile',
-            '@citadel-app/base:fs.writeFile',
-            '@citadel-app/base:fs.exists',
-            '@citadel-app/base:fs.createDirectory',
-            '@citadel-app/base:app.updateSetting',
-            '@citadel-app/base:net.fetch',
-            '@citadel-app/base:db.getFeedItems',
-            '@citadel-app/base:db.saveFeedItems',
-            '@citadel-app/base:db.getFeedStatus',
-            '@citadel-app/base:db.updateFeedStatus'
-        ]
-    },
 
-    settingsConfig: {
-        title: "YouTube Feed Tracker",
-        fields: []
-    },
+    renderer: {
+        providers: [
+            { entry: { id: 'youtube-provider', scope: 'global', priority: 101 }, component: YouTubeProvider },
+            { entry: { id: 'youtube-player', scope: 'global', priority: 102 }, component: YouTubePlayerProvider }
+        ],
 
-    providers: [
-        { entry: { id: 'youtube-provider', scope: 'global', priority: 101 }, component: YouTubeProvider },
-        { entry: { id: 'youtube-player', scope: 'global', priority: 102 }, component: YouTubePlayerProvider }
-    ],
+        routes: [
+            { path: '/youtube', component: lazy(() => import('./pages/YouTubePage').then(m => ({ default: m.YouTubePage }))) }
+        ],
 
-    globalComponents: [
-        { region: 'global-overlay', component: FloatingYouTubePlayer }
-    ],
-
-    routes: [
-        { path: '/youtube', component: lazy(() => import('./pages/YouTubePage').then(m => ({ default: m.YouTubePage }))) }
-    ],
-
-    navigationItems: [
-        {
-            id: 'nav-youtube',
-            label: 'YouTube Scrolls',
-            path: '/youtube',
-            icon: 'Youtube',
-            activeClass: 'text-primary bg-primary/10',
-            inactiveClass: 'text-red-500 hover:bg-red-500/10',
-            priority: 20
-        }
-    ],
-
-    linkSearchProviders: [
-        {
-            id: 'youtube-video',
-            label: 'YouTube Videos',
-            icon: 'Youtube',
-            search: async (query: string) => {
-                if (!YouTubeModuleBindings.search) return [];
-                return YouTubeModuleBindings.search(query);
+        navigation: [
+            {
+                id: 'nav-youtube',
+                label: 'YouTube Scrolls',
+                path: '/youtube',
+                icon: 'Youtube',
+                activeClass: 'text-primary bg-primary/10',
+                inactiveClass: 'text-red-500 hover:bg-red-500/10',
+                priority: 20
             }
-        }
-    ],
-    crossLinkHandlers: [
-        {
-            type: 'youtube-video',
-            label: 'Link to Scroll',
-            icon: 'Link',
-            handler: (itemId: string, entry: any, metadata: any) => {
-                if (YouTubeModuleBindings.linkResolver) {
-                    YouTubeModuleBindings.linkResolver(metadata.feedId, itemId, entry);
+        ],
+
+        linkSearchProviders: [
+            {
+                id: 'youtube-video',
+                label: 'YouTube Videos',
+                icon: 'Youtube',
+                search: async (query: string) => {
+                    if (!YouTubeModuleBindings.search) return [];
+                    return YouTubeModuleBindings.search(query);
                 }
             }
-        }
-    ],
+        ],
 
-    onRendererActivate: async (registrar: RendererRegistrar, _api: ScopedAPI) => {
-        registrar.registerPluginSettingsConfig({
+        crossLinkHandlers: [
+            {
+                type: 'youtube-video',
+                label: 'Link to Scroll',
+                icon: 'Link',
+                handler: (itemId: string, entry: any, metadata: any) => {
+                    if (YouTubeModuleBindings.linkResolver) {
+                        YouTubeModuleBindings.linkResolver(metadata.feedId, itemId, entry);
+                    }
+                }
+            }
+        ],
+
+        settingsConfig: {
             title: 'YouTube Feeds',
             fields: [
                 {
@@ -114,6 +91,10 @@ export const YouTubeModule: IModule = {
                     defaultValue: 50
                 }
             ]
-        });
+        },
+
+        onActivate: async (registrar) => {
+            registrar.registerGlobalComponent('global-overlay', FloatingYouTubePlayer);
+        }
     }
-};
+});

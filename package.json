@@ -29,8 +29,11 @@
       "@citadel-app/base:db.saveFeedItems",
       "@citadel-app/base:db.getFeedStatus",
       "@citadel-app/base:db.updateFeedStatus"
-    ]
+    ],
+    "providesIpcs": [],
+    "sidecars": []
   },
+
   "scripts": {
     "dev": "vite build --watch",
     "build": "vite build",
@@ -67,6 +70,7 @@
     "@types/react-window": "^1.8.8",
     "@types/uuid": "^10.0.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "electron": "^31.0.0",
     "better-sqlite3": "^12.8.0",
     "fs-extra": "^11.2.0",
     "lucide-react": "^0.453.0",
