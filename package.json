@@ -1,6 +1,6 @@
 {
   "name": "@citadel-app/youtube",
-  "version": "1.2.1",
+  "version": "1.2.3",
   "description": "YouTube Plugin for Citadel App",
   "author": "Citadel Team",
   "license": "MIT",
@@ -9,7 +9,7 @@
     "url": "git+https://github.com/citadel-app/citadel-plugin-youtube.git"
   },
   "engines": {
-    "citadel": ">=1.2.1"
+    "citadel": ">=1.2.3"
   },
   "citadel": {
     "title": "YouTube Scrolls",
@@ -33,11 +33,12 @@
     "providesIpcs": [],
     "sidecars": []
   },
-
   "scripts": {
     "dev": "vite build --watch",
-    "build": "vite build",
-    "generate:marketplace": "node scripts/generate-marketplace-manifest.js"
+    "build": "npm run build:main && npm run build:renderer",
+    "generate:marketplace": "node scripts/generate-marketplace-manifest.js",
+    "build:main": "vite build --mode main",
+    "build:renderer": "vite build --mode renderer"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
@@ -58,9 +59,9 @@
     "uuid": "*"
   },
   "devDependencies": {
-    "@citadel-app/core": "^1.2.1",
-    "@citadel-app/sdk": "^1.2.1",
-    "@citadel-app/ui": "^1.2.1",
+    "@citadel-app/core": "^1.2.3",
+    "@citadel-app/sdk": "^1.2.3",
+    "@citadel-app/ui": "^1.2.3",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
     "@types/better-sqlite3": "^7.6.13",
     "@types/fs-extra": "^11.0.4",
