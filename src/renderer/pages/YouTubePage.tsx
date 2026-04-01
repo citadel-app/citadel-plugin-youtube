@@ -2,7 +2,7 @@ import { useYouTubePlayer } from '../context/YouTubePlayerContext';
 import { SplitPaneLayout, SplitPaneProvider, useCoreServices, Icon, ConfirmDialog, cn } from '@citadel-app/ui';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { FeedItem } from '@citadel-app/core';
-import { Panel, Group, Separator } from 'react-resizable-panels';
+import { Panel, PanelGroup as Group, PanelResizeHandle as Separator } from 'react-resizable-panels';
 import { YouTubeVideoGrid } from '../components/youtube/YouTubeVideoGrid';
 import { AddYouTubeDialog } from '../components/youtube/AddYouTubeDialog';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuPortal } from '@citadel-app/ui';
